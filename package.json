@@ -1,6 +1,6 @@
 {
   "name": "stringified-handler",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A super simple approach to SSR events handling through object literals.",
   "main": "./cjs/index.js",
   "scripts": {
@@ -13,7 +13,11 @@
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "test": "nyc node test/index.js"
   },
-  "keywords": ["SSR", "event", "render"],
+  "keywords": [
+    "SSR",
+    "event",
+    "render"
+  ],
   "author": "Andrea Giammarchi",
   "license": "ISC",
   "devDependencies": {
