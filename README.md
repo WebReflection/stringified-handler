@@ -1,6 +1,8 @@
 # stringified handler
 
-A super simple approach to SSR events handling, which enables minimal event handling through an object literal.
+[![Build Status](https://travis-ci.com/WebReflection/stringified-handler.svg?branch=master)](https://travis-ci.com/WebReflection/stringified-handler) [![Coverage Status](https://coveralls.io/repos/github/WebReflection/stringified-handler/badge.svg?branch=master)](https://coveralls.io/github/WebReflection/stringified-handler?branch=master)
+
+A super simple approach to SSR events handling through object literals.
 
 ```js
 import StringifiedHandler from 'stringified-handler';
