@@ -46,7 +46,7 @@ If used directly, `handler.onClick` would be a function bound to the `handler`, 
 
 ### Limitations
 
-The object literal must be very simple, and none of its methods, functions, utilities, can refer to any outer scope.
+The object literal must be very simple, and none of its methods, functions, utilities, can refer to any outer scope, *unless* whatever it's using is reachable because the dependency has been injected too.
 
 Such object could handle state changes, or delegate to a third parts library, as long as this is already available on the global context, before a user interacts.
 
