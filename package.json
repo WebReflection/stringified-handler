@@ -1,6 +1,6 @@
 {
   "name": "stringified-handler",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A super simple approach to SSR events handling through object literals.",
   "main": "./cjs/index.js",
   "scripts": {
