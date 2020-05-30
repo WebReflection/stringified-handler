@@ -15,12 +15,19 @@
       clickCounts: 0,
       onClick(event) {
         event.preventDefault();
-        console.log(++this.clickCounts);
+        console.log('clicks', ++this.clickCounts);
+        console.log('currentTarget', event.currentTarget.nodeName);
+        console.log('target', event.target.nodeName);
       }
     });
-    console.log(handler.toString());
+    document.body.appendChild(
+      document.createElement('script')
+    ).textContent = handler;
+    document.body.setAttribute('onclick', handler.onClick);
   });
   </script>
 </head>
-<body></body>
+<body>
+  <h1>Try to click me, and read in console.</h1>
+</body>
 </html>

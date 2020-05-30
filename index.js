@@ -27,8 +27,10 @@ self.stringHandler = (function (exports) {
     };
     allKeys.forEach(function (key) {
       defineProperty(object, key, {
-        get: function get() {
-          return typeof handler[key] === 'function' ? "".concat(name, ".").concat(key, "(event)") : handler[key];
+        get: typeof handler[key] === 'function' ? function () {
+          return "".concat(name, ".").concat(key, "(event)");
+        } : function () {
+          return handler[key];
         }
       });
     });

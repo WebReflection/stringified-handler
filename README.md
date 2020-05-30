@@ -40,8 +40,24 @@ var _$H0={
 
 While the `handler.onClick` will return `_$H0.onClick(event)`, which is suitable for any DOM Level 0 event attached directly to its layout.
 
+
 ### Limitations
 
 The object literal must be very simple, and none of its methods, functions, utilities, can refer to any outer scope.
 
 Such object could handle state changes, or delegate to a third parts library, as long as this is already available on the global context, before a user interacts.
+
+
+### How to know which node triggered the event?
+
+Every `event` object contains a `currentTarget` property, which refers to the node that actually had the event attached, while the `target` could be any inner node that triggered initially such event.
+
+A click in the `H1` element, as example, would have `currentTarget` pointing at the `BODY`, and the `target` pointing at the `H1` element.
+
+```html
+<!doctype html>
+<script>${handler}</script>
+<body onclick=${handler.onClick}>
+  <h1>Hello World</h1>
+</body>
+```

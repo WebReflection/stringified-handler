@@ -24,11 +24,9 @@ function StringifiedHandler(handler) {
   };
   allKeys.forEach(key => {
     defineProperty(object, key, {
-      get: () => (
-        typeof handler[key] === 'function' ?
-          `${name}.${key}(event)` :
-          handler[key]
-      )
+      get: typeof handler[key] === 'function' ?
+        () => `${name}.${key}(event)` :
+        () => handler[key]
     });
   });
   return object;
