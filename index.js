@@ -7,12 +7,12 @@ self.stringHandler = (function (exports) {
 
   var parse = function parse(handler, keys) {
     return keys.map(function (key) {
-      return "".concat(key, ":").concat(typeof handler[key] === 'function' ? transform(handler, key) : stringify(handler[key]));
+      return key + ':' + (typeof handler[key] === 'function' ? transform(handler, key) : stringify(handler[key]));
     }).join(',');
   };
 
   var transform = function transform(handler, key) {
-    return handler[key].toString().replace(new RegExp("^".concat(key, "\\s*\\(")), 'function(');
+    return handler[key].toString().replace(new RegExp('^' + key + '\\s*\\('), 'function(');
   };
 
   var i = 0;
@@ -21,7 +21,7 @@ self.stringHandler = (function (exports) {
     var name = '_$H' + i++;
     var object = {
       toString: function toString() {
-        return "var ".concat(name, "={").concat(parse(handler, allKeys), "};");
+        return 'var ' + name + '={' + parse(handler, allKeys) + '};';
       }
     };
     allKeys.forEach(function (key) {
@@ -31,7 +31,7 @@ self.stringHandler = (function (exports) {
         value = value.bind(handler);
 
         value.toString = function () {
-          return "".concat(name, ".").concat(key, "(event)");
+          return name + '.' + key + '(event)';
         };
       }
 

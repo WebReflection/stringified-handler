@@ -50,7 +50,7 @@ The object literal must be very simple, and none of its methods, functions, util
 
 Such object could handle state changes, or delegate to a third parts library, as long as this is already available on the global context, before a user interacts.
 
-Please note that the snapshot of each property is resolved at declaration time, mostly to keep it simple and little in size, so that changing properties at runtime, after definition, will not be reflected.
+Please note that each property is resolved at declaration time only, mostly to keep it simple and little in size, meaning that changing properties at runtime, after definition, will not be reflected.
 
 
 
