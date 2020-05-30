@@ -3,8 +3,7 @@ self.stringHandler = (function (exports) {
 
   /*! (c) Andrea Giammarchi - ISC */
   var stringify = JSON.stringify;
-  var defineProperty = Object.defineProperty,
-      keys = Object.keys;
+  var keys = Object.keys;
 
   var parse = function parse(handler, keys) {
     return keys.map(function (key) {
@@ -26,13 +25,17 @@ self.stringHandler = (function (exports) {
       }
     };
     allKeys.forEach(function (key) {
-      defineProperty(object, key, {
-        get: typeof handler[key] === 'function' ? function () {
+      var value = handler[key];
+
+      if (typeof value === 'function') {
+        value = value.bind(handler);
+
+        value.toString = function () {
           return "".concat(name, ".").concat(key, "(event)");
-        } : function () {
-          return handler[key];
-        }
-      });
+        };
+      }
+
+      object[key] = value;
     });
     return object;
   }

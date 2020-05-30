@@ -1,7 +1,7 @@
 /*! (c) Andrea Giammarchi - ISC */
 
 const {stringify} = JSON;
-const {defineProperty, keys} = Object;
+const {keys} = Object;
 
 const parse = (handler, keys) => keys.map(key => `${key}:${
   typeof handler[key] === 'function' ?
@@ -22,11 +22,12 @@ export default function StringifiedHandler(handler) {
     toString: () => `var ${name}={${parse(handler, allKeys)}};`
   };
   allKeys.forEach(key => {
-    defineProperty(object, key, {
-      get: typeof handler[key] === 'function' ?
-        () => `${name}.${key}(event)` :
-        () => handler[key]
-    });
+    let value = handler[key];
+    if (typeof value === 'function') {
+      value = value.bind(handler);
+      value.toString = () => `${name}.${key}(event)`;
+    }
+    object[key] = value;
   });
   return object;
 };

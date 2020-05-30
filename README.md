@@ -38,7 +38,10 @@ var _$H0={
 };
 ```
 
-While the `handler.onClick` will return `_$H0.onClick(event)`, which is suitable for any DOM Level 0 event attached directly to its layout.
+While the `handler.onClick`, as string, will return `_$H0.onClick(event)`, which is suitable for any DOM Level 0 event attached directly to its layout.
+
+If used directly, `handler.onClick` would be a function bound to the `handler`, so that it can be reused with client-side libraries too right away.
+
 
 
 ### Limitations
@@ -46,6 +49,9 @@ While the `handler.onClick` will return `_$H0.onClick(event)`, which is suitable
 The object literal must be very simple, and none of its methods, functions, utilities, can refer to any outer scope.
 
 Such object could handle state changes, or delegate to a third parts library, as long as this is already available on the global context, before a user interacts.
+
+Please note that the snapshot of each property is resolved at declaration time, mostly to keep it simple and little in size, so that changing properties at runtime, after definition, will not be reflected.
+
 
 
 ### How to know which node triggered the event?
