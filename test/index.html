@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>stringified-handler</title>
+  <script type="module">
+  import(
+    /^(?:localhost|[0-9.]+)$/.test(location.hostname) ?
+    '../esm/index.js' :
+    'https://unpkg.com/stringified-handler?module'
+  )
+  .then(({default: StringifiedHandler}) => {
+    const handler = StringifiedHandler({
+      clickCounts: 0,
+      onClick(event) {
+        event.preventDefault();
+        console.log(++this.clickCounts);
+      }
+    });
+    console.log(handler.toString());
+  });
+  </script>
+</head>
+<body></body>
+</html>
