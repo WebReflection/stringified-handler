@@ -42,17 +42,22 @@ While the `handler.onClick`, as string, will return `_$H0.onClick(event)`, which
 
 If used directly, `handler.onClick` would be a function bound to the `handler`, so that it can be reused with client-side libraries too right away.
 
+The library, used via SSR, costs *zero extra bytes*, as the only payload depends on how big is the handler. Using JS minifiers after `.toString()` might also help reducing further more the payload size.
 
 
-### Limitations
 
-The object literal must be very simple, and none of its methods, functions, utilities, can refer to any outer scope, *unless* whatever it's using is reachable because the dependency has been injected too.
+### Usage & Limitations
+
+The object literal must be quite simple, and none of its methods, functions, utilities, can refer to any outer scope, *unless* whatever it's using is reachable because the dependency has been previously injected too.
+
+In few words, *no outer scope allowed*, and following there's an explanation of what can be serialized:
 
 ```js
 StringifiedHandler({
-  // any JSON serializable value is fine
+  // any JSON serializable value is fine, and
   // objects and arrays will be recursively parsed
-  serializable: true,
+  serializable: {} || [] || true || false || null ||
+                number || string || undefined,
   // getters and setters are OK
   get prop() {},
   set prop(value) {},
@@ -62,14 +67,14 @@ StringifiedHandler({
   methodFn: function (a, b, c) {},
   // arrows are also OK but not normalized for legacy
   methodArr: e => {}
-  // spread operators and defaults are also OK
-  // but these are not normalized for legacy
+  // spread arguments and defaults are also OK
+  // but not normalized for legacy
+  // generators, as well as async function,
+  // are possible too
 });
 ```
 
 Such object could handle state changes, or delegate to a third parts library, as long as this is already available on the global context, before a user interacts.
-
-Please note that each property is resolved at declaration time only, mostly to keep it simple and little in size, meaning that changing properties at runtime, after definition, will not be reflected.
 
 
 

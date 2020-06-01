@@ -45,3 +45,10 @@ const recursive = StringifiedHandler({
 });
 
 console.assert(recursive.toString() === 'var _$H5={values:[1,{method:function() {}},2]};', 'recursive OK');
+
+const asynchronous = StringifiedHandler({
+  async short() {},
+  method: async function () {}
+});
+
+console.assert(asynchronous.toString() === 'var _$H6={short:async short() {},method:async function () {}};', 'async OK');
