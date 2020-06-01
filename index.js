@@ -17,7 +17,7 @@ self.stringHandler = (function (exports) {
           set = _getOwnPropertyDescri.set,
           value = _getOwnPropertyDescri.value;
 
-      if (get && set) key = get + ',' + set;else if (get) key = '' + get;else if (set) key = '' + set;else key += ':' + parseValue(value, key);
+      if (get && set) key = get + ',' + set;else if (get) key = '' + get;else if (set) key = '' + set;else key = stringify(key) + ':' + parseValue(value, key);
       return key;
     }).join(',') + '}';
   };
@@ -25,7 +25,9 @@ self.stringHandler = (function (exports) {
   var parseValue = function parseValue(value, key) {
     var type = typeof(value);
 
-    if (type === 'function') return value.toString().replace(new RegExp('^(\\*)?\\s*' + key + '[^(]*?\\('), 'function$1(');
+    if (type === 'function') return value.toString().replace(new RegExp('^(\\*|async )?\\s*' + key + '[^(]*?\\('), function (_, $1) {
+      return $1 === '*' ? 'function* (' : ($1 || '') + 'function (';
+    });
     if (type === 'object' && value) return isArray(value) ? parseArray(value) : parseObject(value, keys(value));
     return stringify(value);
   };

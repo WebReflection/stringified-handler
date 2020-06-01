@@ -15,7 +15,7 @@ const parseObject = (handler, keys) => (
     else if (set)
       key = '' + set;
     else
-      key += ':' + parseValue(value, key);
+      key = stringify(key) + ':' + parseValue(value, key);
     return key;
   }).join(',') + '}'
 );
@@ -24,7 +24,8 @@ const parseValue = (value, key) => {
   const type = typeof value;
   if (type === 'function')
     return value.toString().replace(
-      new RegExp('^(\\*)?\\s*' + key + '[^(]*?\\('), 'function$1('
+      new RegExp('^(\\*|async )?\\s*' + key + '[^(]*?\\('),
+      (_, $1) => $1 === '*' ? 'function* (' : (($1 || '') + 'function (')
     );
   if (type === 'object' && value)
     return isArray(value) ?

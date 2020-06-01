@@ -9,7 +9,7 @@ const test = StringifiedHandler({
 console.assert(test.onClick.toString() === '_$H0.onClick(event)', 'onClick is OK');
 console.assert(test.test.toString() === '_$H0.test(event)', 'test is OK');
 console.assert(test.value === 123, 'value is OK');
-console.assert(test.toString() === 'var _$H0={onClick:function(event) {},test:event => {},value:123};', 'toString is OK');
+console.assert(test.toString() === 'var _$H0={"onClick":function (event) {},"test":event => {},"value":123};', 'toString is OK');
 
 const getter = StringifiedHandler({
   get map() {}
@@ -29,14 +29,14 @@ const accessor = StringifiedHandler({
   set value(_value) {this._value = _value}
 });
 
-console.assert(accessor.toString() === 'var _$H3={_value:null,get value() {return this._value},set value(_value) {this._value = _value}};', 'accessor is OK');
+console.assert(accessor.toString() === 'var _$H3={"_value":null,get value() {return this._value},set value(_value) {this._value = _value}};', 'accessor is OK');
 
 const generators = StringifiedHandler({
   * method() {},
   test: function* (){}
 });
 
-console.assert(generators.toString() === 'var _$H4={method:function*() {},test:function* (){}};', 'generators OK');
+console.assert(generators.toString() === 'var _$H4={"method":function* () {},"test":function* (){}};', 'generators OK');
 
 const recursive = StringifiedHandler({
   values: [1, {
@@ -44,11 +44,11 @@ const recursive = StringifiedHandler({
   }, 2]
 });
 
-console.assert(recursive.toString() === 'var _$H5={values:[1,{method:function() {}},2]};', 'recursive OK');
+console.assert(recursive.toString() === 'var _$H5={"values":[1,{"method":function () {}},2]};', 'recursive OK');
 
 const asynchronous = StringifiedHandler({
   async short() {},
   method: async function () {}
 });
 
-console.assert(asynchronous.toString() === 'var _$H6={short:async short() {},method:async function () {}};', 'async OK');
+console.assert(asynchronous.toString() === 'var _$H6={"short":async function () {},"method":async function () {}};', 'async OK');
