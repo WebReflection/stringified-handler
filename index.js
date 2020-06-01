@@ -20,7 +20,7 @@ self.stringHandler = (function (exports) {
   };
 
   var transform = function transform(handler, key) {
-    return handler[key].toString().replace(new RegExp('^' + key + '\\s*\\('), 'function(');
+    return handler[key].toString().replace(new RegExp('^' + key + '[^(]*?\\('), 'function(');
   };
 
   var i = 0;

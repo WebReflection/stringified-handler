@@ -19,7 +19,7 @@ const parse = (handler, keys) => keys.map(key => {
 }).join(',');
 
 const transform = (handler, key) => handler[key].toString().replace(
-  new RegExp('^' + key + '\\s*\\('), 'function('
+  new RegExp('^' + key + '[^(]*?\\('), 'function('
 );
 
 let i = 0;
