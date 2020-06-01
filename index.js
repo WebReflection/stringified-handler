@@ -3,11 +3,19 @@ self.stringHandler = (function (exports) {
 
   /*! (c) Andrea Giammarchi - ISC */
   var stringify = JSON.stringify;
-  var keys = Object.keys;
+  var defineProperty = Object.defineProperty,
+      getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
+      keys = Object.keys;
 
   var parse = function parse(handler, keys) {
     return keys.map(function (key) {
-      return key + ':' + (typeof handler[key] === 'function' ? transform(handler, key) : stringify(handler[key]));
+      var _getOwnPropertyDescri = getOwnPropertyDescriptor(handler, key),
+          get = _getOwnPropertyDescri.get,
+          set = _getOwnPropertyDescri.set,
+          value = _getOwnPropertyDescri.value;
+
+      if (get && set) key = get + ',' + set;else if (get) key = '' + get;else if (set) key = '' + set;else if (typeof value === 'function') key += ':' + transform(handler, key);else key += ':' + stringify(value);
+      return key;
     }).join(',');
   };
 
@@ -25,17 +33,17 @@ self.stringHandler = (function (exports) {
       }
     };
     allKeys.forEach(function (key) {
-      var value = handler[key];
+      var desc = getOwnPropertyDescriptor(handler, key);
 
-      if (typeof value === 'function') {
-        value = value.bind(handler);
+      if (typeof desc.value === 'function') {
+        desc.value = desc.value.bind(handler);
 
-        value.toString = function () {
+        desc.value.toString = function () {
           return name + '.' + key + '(event)';
         };
       }
 
-      object[key] = value;
+      defineProperty(object, key, desc);
     });
     return object;
   }

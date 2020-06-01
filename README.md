@@ -48,6 +48,22 @@ If used directly, `handler.onClick` would be a function bound to the `handler`, 
 
 The object literal must be very simple, and none of its methods, functions, utilities, can refer to any outer scope, *unless* whatever it's using is reachable because the dependency has been injected too.
 
+```js
+StringifiedHandler({
+  // any JSON serializable value is fine
+  serializable: true,
+  // getters and setters are OK
+  get prop() {},
+  set prop(value) {},
+  // shorthand methods are OK and normalized for legacy
+  method(one, ormore, values) {},
+  // regular functions are OK too
+  methodFn: function (a, b, c) {},
+  // arrows are also OK but not normalized for legacy
+  methodArr: e => {}
+});
+```
+
 Such object could handle state changes, or delegate to a third parts library, as long as this is already available on the global context, before a user interacts.
 
 Please note that each property is resolved at declaration time only, mostly to keep it simple and little in size, meaning that changing properties at runtime, after definition, will not be reflected.
