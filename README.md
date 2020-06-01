@@ -51,6 +51,7 @@ The object literal must be very simple, and none of its methods, functions, util
 ```js
 StringifiedHandler({
   // any JSON serializable value is fine
+  // objects and arrays will be recursively parsed
   serializable: true,
   // getters and setters are OK
   get prop() {},
