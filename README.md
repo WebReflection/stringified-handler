@@ -66,11 +66,14 @@ StringifiedHandler({
   // regular functions are OK too
   methodFn: function (a, b, c) {},
   // arrows are also OK but not normalized for legacy
-  methodArr: e => {}
+  methodArr: e => {},
   // spread arguments and defaults are also OK
   // but not normalized for legacy
   // generators, as well as async function,
   // are possible too
+  async short() {},
+  methodAsync: async function () {},
+  *generator() {}
 });
 ```
 
