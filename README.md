@@ -56,11 +56,13 @@ StringifiedHandler({
   get prop() {},
   set prop(value) {},
   // shorthand methods are OK and normalized for legacy
-  method(one, ormore, values) {},
+  method(one, orMore, values) {},
   // regular functions are OK too
   methodFn: function (a, b, c) {},
   // arrows are also OK but not normalized for legacy
   methodArr: e => {}
+  // spread operators and defaults are also OK
+  // but these are not normalized for legacy
 });
 ```
 
