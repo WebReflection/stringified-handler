@@ -1,26 +1,37 @@
 self.stringHandler = (function (exports) {
   'use strict';
 
+  
+
   /*! (c) Andrea Giammarchi - ISC */
+  var isArray = Array.isArray;
   var stringify = JSON.stringify;
   var defineProperty = Object.defineProperty,
       getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
       keys = Object.keys;
 
-  var parse = function parse(handler, keys) {
-    return keys.map(function (key) {
+  var parseObject = function parseObject(handler, keys) {
+    return '{' + keys.map(function (key) {
       var _getOwnPropertyDescri = getOwnPropertyDescriptor(handler, key),
           get = _getOwnPropertyDescri.get,
           set = _getOwnPropertyDescri.set,
           value = _getOwnPropertyDescri.value;
 
-      if (get && set) key = get + ',' + set;else if (get) key = '' + get;else if (set) key = '' + set;else if (typeof value === 'function') key += ':' + transform(handler, key);else key += ':' + stringify(value);
+      if (get && set) key = get + ',' + set;else if (get) key = '' + get;else if (set) key = '' + set;else key += ':' + parseValue(value, key);
       return key;
-    }).join(',');
+    }).join(',') + '}';
   };
 
-  var transform = function transform(handler, key) {
-    return handler[key].toString().replace(new RegExp('^' + key + '[^(]*?\\('), 'function(');
+  var parseValue = function parseValue(value, key) {
+    var type = typeof(value);
+
+    if (type === 'function') return value.toString().replace(new RegExp('^(\\*)?\\s*' + key + '[^(]*?\\('), 'function$1(');
+    if (type === 'object' && value) return isArray(value) ? parseArray(value) : parseObject(value, keys(value));
+    return stringify(value);
+  };
+
+  var parseArray = function parseArray(array) {
+    return '[' + array.map(parseValue).join(',') + ']';
   };
 
   var i = 0;
@@ -29,7 +40,7 @@ self.stringHandler = (function (exports) {
     var name = '_$H' + i++;
     var object = {
       toString: function toString() {
-        return 'var ' + name + '={' + parse(handler, allKeys) + '};';
+        return 'var ' + name + '=' + parseObject(handler, allKeys) + ';';
       }
     };
     allKeys.forEach(function (key) {

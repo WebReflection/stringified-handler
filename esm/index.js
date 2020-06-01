@@ -1,26 +1,38 @@
 /*! (c) Andrea Giammarchi - ISC */
 
+const {isArray} = Array;
 const {stringify} = JSON;
 const {defineProperty, getOwnPropertyDescriptor, keys} = Object;
 
-const parse = (handler, keys) => keys.map(key => {
-  const {get, set, value} = getOwnPropertyDescriptor(handler, key);
-  if (get && set)
-    key = get + ',' + set;
-  else if (get)
-    key = '' + get;
-  else if (set)
-    key = '' + set;
-  else if (typeof value === 'function')
-    key += ':' + transform(handler, key);
-  else
-    key += ':' + stringify(value);
-  return key;
-}).join(',');
-
-const transform = (handler, key) => handler[key].toString().replace(
-  new RegExp('^' + key + '[^(]*?\\('), 'function('
+const parseObject = (handler, keys) => (
+  '{' + keys.map(key => {
+    const {get, set, value} = getOwnPropertyDescriptor(handler, key);
+    if (get && set)
+      key = get + ',' + set;
+    else if (get)
+      key = '' + get;
+    else if (set)
+      key = '' + set;
+    else
+      key += ':' + parseValue(value, key);
+    return key;
+  }).join(',') + '}'
 );
+
+const parseValue = (value, key) => {
+  const type = typeof value;
+  if (type === 'function')
+    return value.toString().replace(
+      new RegExp('^(\\*)?\\s*' + key + '[^(]*?\\('), 'function$1('
+    );
+  if (type === 'object' && value)
+    return isArray(value) ?
+            parseArray(value) :
+            parseObject(value, keys(value));
+  return stringify(value);
+};
+
+const parseArray = array => ('[' + array.map(parseValue).join(',') + ']');
 
 let i = 0;
 
@@ -29,7 +41,7 @@ export default function StringifiedHandler(handler) {
   const name = '_$H' + i++;
   const object = {
     toString: () => (
-      'var ' + name + '={' + parse(handler, allKeys) + '};'
+      'var ' + name + '=' + parseObject(handler, allKeys) + ';'
     )
   };
   allKeys.forEach(key => {

@@ -30,3 +30,18 @@ const accessor = StringifiedHandler({
 });
 
 console.assert(accessor.toString() === 'var _$H3={_value:null,get value() {return this._value},set value(_value) {this._value = _value}};', 'accessor is OK');
+
+const generators = StringifiedHandler({
+  * method() {},
+  test: function* (){}
+});
+
+console.assert(generators.toString() === 'var _$H4={method:function*() {},test:function* (){}};', 'generators OK');
+
+const recursive = StringifiedHandler({
+  values: [1, {
+    method() {}
+  }, 2]
+});
+
+console.assert(recursive.toString() === 'var _$H5={values:[1,{method:function() {}},2]};', 'recursive OK');
